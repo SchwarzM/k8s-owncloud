@@ -1,0 +1,38 @@
+apiVersion: v1beta3
+kind: ReplicationController
+metadata:
+  name: owncloud
+  namespace: default
+  labels:
+    app: owncloud
+spec:
+  replicas: 1
+  selector:
+    app: owncloud
+  template:
+    metadata:
+      labels:
+        app: owncloud
+    spec:
+      containers:
+      - name: owncloud
+        image: l3iggs/owncloud
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/webapps/owncloud/config"
+        - name: data
+          mountPath: "/usr/share/webapps/owncloud/data"
+      volumes:
+      - name: config
+        hostPath: 
+          path: "/mnt/vol0/k8s/owncloud/config"
+      - name: data
+        hostPath: 
+          path: "/mnt/vol0/k8s/owncloud/data"
